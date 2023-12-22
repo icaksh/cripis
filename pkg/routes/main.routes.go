@@ -12,4 +12,5 @@ func MainRoutes(a *fiber.App) {
 	AnnouncementRoutes(private, public)
 	AuthRoutes(private, public)
 	DakRoutes(public)
+	TrademarkRoutes(private, public)
 }

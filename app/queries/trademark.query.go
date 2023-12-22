@@ -30,7 +30,8 @@ func (q *TrademarkQueries) CreateTrademark(v *models.Trademark) error {
 func (q *TrademarkQueries) GetAllTrademarks() ([]models.Trademark, error) {
 	result := []models.Trademark{}
 	query := `SELECT * FROM trademarks ORDER BY trademarks.created_at`
-	err := q.Get(&result, query)
+
+	err := q.Select(&result, query)
 	if err != nil {
 		return result, err
 	}
@@ -40,7 +41,7 @@ func (q *TrademarkQueries) GetAllTrademarks() ([]models.Trademark, error) {
 func (q *TrademarkQueries) GetAllTrademarksByName(name string) ([]models.Trademark, error) {
 	result := []models.Trademark{}
 	query := `SELECT * FROM trademarks WHERE trademarks.name=$1 ORDER BY trademarks.created_at`
-	err := q.Get(&result, query, name)
+	err := q.Select(&result, query, name)
 	if err != nil {
 		return result, err
 	}
@@ -65,28 +66,4 @@ func (q *TrademarkQueries) GetTrademarkById(id uuid.UUID) ([]GetTrademarkByUser,
 		return result, err
 	}
 	return result, nil
-}
-
-func (q *TrademarkQueries) UpdateTrademarkRegistration(id uuid.UUID) (models.TrademarkRegistration, error) {
-	result := models.TrademarkRegistration{}
-	query := `SELECT * FROM trademarks WHERE trademarks.id=$1`
-
-	err := q.Get(&result, query, id)
-	if err != nil {
-		return result, err
-	}
-
-	return result, nil
-}
-
-func (q *TrademarkQueries) DeleteTrademarkRegistration(id uuid.UUID) error {
-	query := `DELETE FROM trademarks WHERE id=$1`
-
-	_, err := q.Exec(query, id)
-	if err != nil {
-		// Return only error.
-		return err
-	}
-
-	return nil
 }

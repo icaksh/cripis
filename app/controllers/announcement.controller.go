@@ -126,7 +126,7 @@ func CreateAnnouncement(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error":   true,
 			"message": "Terjadi kesalahan (Internal Server Error)",
-			"note":    "cannot update announcement from id:" + strconv.Itoa(body.Id),
+			"note":    "cannot create announcement",
 		})
 	}
 
@@ -230,14 +230,7 @@ func DeleteAnnouncement(c *fiber.Ctx) error {
 		})
 	}
 
-	data := &models.Announcement{
-		CreatedBy:   au.User,
-		Title:       body.Title,
-		Description: body.Description,
-		Image:       body.Image,
-	}
-
-	res := db.DeleteAnnouncement(id)
+	res := db.DeleteAnnouncement(body.Id)
 	if res != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error":   true,

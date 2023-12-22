@@ -8,6 +8,7 @@ type Queries struct {
 	*queries.UserQueries
 	*queries.CivilQueries
 	*queries.AnnouncementQueries
+	*queries.TrademarkQueries
 }
 
 type RedisQueries struct {
@@ -24,6 +25,7 @@ func Connect() (*Queries, error) {
 		UserQueries:         &queries.UserQueries{DB: db},
 		CivilQueries:        &queries.CivilQueries{DB: db},
 		AnnouncementQueries: &queries.AnnouncementQueries{DB: db},
+		TrademarkQueries:    &queries.TrademarkQueries{DB: db},
 	}, nil
 }
 

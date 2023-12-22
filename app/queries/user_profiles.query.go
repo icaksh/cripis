@@ -3,15 +3,9 @@ package queries
 import (
 	"github.com/google/uuid"
 	"github.com/icaksh/cripis/app/models"
-
-	"github.com/jmoiron/sqlx"
 )
 
-type UserProfilesQueries struct {
-	*sqlx.DB
-}
-
-func (q *UserProfilesQueries) CreateUserProfile(u *models.UserProfile) error {
+func (q *UserQueries) CreateUserProfile(u *models.UserProfile) error {
 	query := `INSERT INTO user_profiles(user_id, created_at, updated_at, card_number, dob, sex, address, village, district, regency, province, postal_code) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`
 	_, err := q.Exec(query, u.ID, u.CreatedAt, u.UpdatedAt, u.CardNumber, u.DoB, u.Sex, u.Address, u.Village, u.District, u.Regency, u.Province, u.PostalCode)
 	if err != nil {

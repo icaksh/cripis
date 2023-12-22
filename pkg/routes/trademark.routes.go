@@ -1,17 +1,24 @@
 package routes
 
 import (
-	"github.com/icaksh/cripis/app/controllers"
-	recaptcha "github.com/jansvabik/fiber-recaptcha"
-
 	"github.com/gofiber/fiber/v2"
+	"github.com/icaksh/cripis/app/controllers"
 )
 
-func AuthRoutes(public fiber.Router, private fiber.Router) {
-	pathName := "/auth"
-	public.Post(pathName+"/login", controllers.Login)
-	public.Post(pathName+"/register", recaptcha.Middleware, controllers.Register)
+func TrademarkRoutes(private fiber.Router, public fiber.Router) {
+	pathName := "/trademark"
+	TrademarkHelpersRoutes(pathName, public)
+	public.Get(pathName+"s", controllers.GetTrademarks)
 	//
-	private.Post(pathName+"/logout", controllers.Logout)
-	private.Post("/token/refresh", controllers.RefreshToken)
+	private.Post(pathName+"/", controllers.CreateAnnouncement)
+	private.Put(pathName+"/", controllers.UpdateAnnouncement)
+	private.Delete(pathName+"/", controllers.DeleteAnnouncement)
+
+}
+
+func TrademarkHelpersRoutes(first string, public fiber.Router) {
+	pathName := first + "/class"
+
+	public.Get(pathName+"/", controllers.GetClasses)
+	public.Get(pathName+"/:id", controllers.GetClass)
 }
