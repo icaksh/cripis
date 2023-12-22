@@ -4,14 +4,16 @@ go 1.18
 
 require (
 	github.com/go-playground/validator/v10 v10.16.0
+	github.com/go-redis/redis/v7 v7.4.1
 	github.com/gofiber/fiber/v2 v2.51.0
 	github.com/gofiber/jwt/v2 v2.2.7
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/uuid v1.4.0
 	github.com/jackc/pgx/v4 v4.18.1
+	github.com/jansvabik/fiber-recaptcha v0.1.3
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/joho/godotenv v1.5.1
-	golang.org/x/crypto v0.15.0
+	golang.org/x/crypto v0.16.0
 )
 
 require (
@@ -34,10 +36,12 @@ require (
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/stretchr/testify v1.8.4 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.50.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
-	golang.org/x/net v0.18.0 // indirect
-	golang.org/x/sys v0.14.0 // indirect
+	golang.org/x/net v0.19.0 // indirect
+	golang.org/x/sys v0.15.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

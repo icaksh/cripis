@@ -1,0 +1,4 @@
+INSERT INTO users (id, created_at, updated_at, email, first_name, last_name, "password", phone, "level", status,
+                   verified)
+VALUES ('6b8e661a-a4d8-407b-81e4-87816365e531', '2023-12-21 15:23:52.53831', '0001-01-01 00:00:00', 'admin@a.co',
+        'Admin', 'DJKI', '$2a$08$LgCYwBNheaKQixSVF5PFAe/RYpRruCj76VmaaRXN.SVxgzRm2qy.O', 0, 1, 1, 1);
