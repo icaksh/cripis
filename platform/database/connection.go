@@ -5,6 +5,7 @@ import (
 )
 
 type Queries struct {
+	*queries.LogQueries
 	*queries.UserQueries
 	*queries.CivilQueries
 	*queries.AnnouncementQueries
@@ -22,10 +23,11 @@ func Connect() (*Queries, error) {
 	}
 
 	return &Queries{
-		UserQueries:         &queries.UserQueries{DB: db},
+		LogQueries:          &queries.LogQueries{DB: db},
+		UserQueries:         &queries.UserQueries{DB: db, LogQueries: queries.LogQueries{DB: db}},
 		CivilQueries:        &queries.CivilQueries{DB: db},
 		AnnouncementQueries: &queries.AnnouncementQueries{DB: db},
-		TrademarkQueries:    &queries.TrademarkQueries{DB: db},
+		TrademarkQueries:    &queries.TrademarkQueries{DB: db, LogQueries: queries.LogQueries{DB: db}},
 	}, nil
 }
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/icaksh/cripis/app/utils"
 	"github.com/icaksh/cripis/pkg/configs"
 	"github.com/icaksh/cripis/pkg/middleware"
@@ -31,7 +32,10 @@ func main() {
 
 	// Define a new Fiber app with config.
 	app := fiber.New(config)
-
+	fmt.Println("Registered routes:")
+	for _, route := range app.Stack() {
+		fmt.Printf("%s %s\n", route)
+	}
 	// Middlewares.
 	middleware.FiberMiddleware(app) // Register Fiber's middleware for app.
 

@@ -24,7 +24,7 @@ func GetAnnouncements(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error":   true,
 			"message": "Terjadi kesalahan (Internal Server Error)",
-			"note":    "cannot get announcements",
+			"note":    "cannot get announcements, err: " + err.Error(),
 		})
 	}
 

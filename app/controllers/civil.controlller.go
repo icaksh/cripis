@@ -103,86 +103,28 @@ func GetVillages(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(resp)
 }
 
-//func GetRegency(c *fiber.Ctx) error {
-//	reqs := models.RegencyRequest{}
-//	resp := models.RegencyResponse{}
-//	err := c.QueryParser(&reqs)
-//	if err != nil {
-//		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-//			"error":   true,
-//			"message": err.Error(),
-//		})
-//	}
-//
-//	validate := utils.NewValidator()
-//	if err := validate.Struct(&reqs); err != nil {
-//		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-//			"error":   true,
-//			"message": err.Error(),
-//		})
-//	}
-//
-//	db, err := database.Connect()
-//	if err != nil {
-//		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-//			"error":   true,
-//			"message": err.Error(),
-//			"note":    "cant connect to database",
-//		})
-//	}
-//
-//	result, err := db.GetRegency(reqs., reqs.ProvinceId)
-//
-//	if err != nil {
-//		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-//			"error":   true,
-//			"message": "regency not found",
-//		})
-//	}
-//
-//	resp = models.RegencyResponse{
-//		Id:   result.Id,
-//		Name: result.Name,
-//	}
-//	return c.Status(fiber.StatusOK).JSON(resp)
-//}
-//
-//
-//func GetVillage(c *fiber.Ctx) error {
-//	reqs := models.VillageRequest{}
-//	err := c.QueryParser(&reqs)
-//	if err != nil {
-//		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-//			"error":   true,
-//			"message": err.Error(),
-//		})
-//	}
-//
-//	validate := utils.NewValidator()
-//	if err := validate.Struct(&reqs); err != nil {
-//		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-//			"error":   true,
-//			"message": err.Error(),
-//		})
-//	}
-//
-//	db, err := database.Connect()
-//	if err != nil {
-//		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-//			"error":   true,
-//			"message": err.Error(),
-//			"note":    "cant connect to database",
-//		})
-//	}
-//
-//	resp, err := db.GetVillages(reqs.ProvinceId, reqs.RegencyId, reqs.DistrictId)
-//
-//	if err != nil {
-//		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-//			"error":   true,
-//			"message": "village not found",
-//		})
-//	}
-//
-//	return c.Status(fiber.StatusOK).JSON(resp)
-//}
+func GetAddressFromDak(c *fiber.Ctx) error {
+	db, err := database.Connect()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   true,
+			"message": err.Error(),
+			"note":    "cant connect to database",
+		})
+	}
+
+	provinceId, _ := strconv.Atoi(c.Params("province_id"))
+	regencyId, _ := strconv.Atoi(c.Params("regency_id"))
+	districtId, _ := strconv.Atoi(c.Params("district_id"))
+	villageId, _ := strconv.Atoi(c.Params("village_id"))
+	resp, err := db.GetAddressFromDak(provinceId, regencyId, districtId, villageId)
+
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error":   true,
+			"message": "address not found, err: " + err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(resp)
+}

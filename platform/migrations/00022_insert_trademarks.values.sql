@@ -1,0 +1,2 @@
+INSERT INTO trademarks(id, created_at, updated_at, expired_at, created_by, registration_number, brand_name, brand_class, owner_name, address, village, district, regency, province, file, images, status)
+VALUES ('e1cc4ab0-f330-49bf-947e-12c73cf3fec8', now(), now(), now() + interval '10 year', 'e1cc4ab0-f330-49bf-947e-12c73cf3fec7', 'TEST001', 'CRIPIS', 1, 'PT. CRIPIS', 'Jl. Raya Bogor KM 30', 2001, 5, 3, 13, 'file', 1);

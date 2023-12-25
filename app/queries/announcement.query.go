@@ -23,7 +23,7 @@ func (q *AnnouncementQueries) GetAnnouncements() ([]models.Announcement, error) 
 	result := []models.Announcement{}
 	query := `SELECT * FROM announcements ORDER BY announcements.created_at`
 
-	err := q.Get(&result, query)
+	err := q.Select(&result, query)
 	if err != nil {
 		return result, err
 	}

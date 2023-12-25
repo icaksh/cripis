@@ -1,11 +1,15 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/icaksh/cripis/app/models"
 	"github.com/icaksh/cripis/app/utils"
 	"github.com/icaksh/cripis/platform/database"
+	"os"
+	"strings"
+	"time"
 )
 
 func GetTrademarkRegistrations(c *fiber.Ctx) error {
@@ -76,7 +80,7 @@ func CreateTrademarkRegistration(c *fiber.Ctx) error {
 			"message": "Anda tidak diperkenankan melakukan aksi ini",
 		})
 	}
-	body := models.TrademarkRegistration{}
+	body := models.TrademarkRegistrationRequest{}
 	err = c.BodyParser(&body)
 
 	if err != nil {
@@ -96,6 +100,73 @@ func CreateTrademarkRegistration(c *fiber.Ctx) error {
 		})
 	}
 
+	image, err := c.FormFile("image")
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   true,
+			"message": "Data tidak dapat divalidasi, mohon cek kembali",
+			"note":    "cannot validate data, err: " + err.Error(),
+		})
+	}
+
+	smeCertificate, err := c.FormFile("sme_certificate")
+	isSmeExist := true
+	if err != nil {
+		isSmeExist = false
+	}
+
+	registerSignature, err := c.FormFile("register_signature")
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   true,
+			"message": "Data tidak dapat divalidasi, mohon cek kembali",
+			"note":    "cannot validate data, err: " + err.Error(),
+		})
+	}
+	currentDate := time.Now()
+
+	dateString := currentDate.Format("2006/01")
+	dir := "./public/uploads/" + dateString + "/" + at.User.String()
+	imageName := dir + "/" + image.Filename
+
+	err = os.MkdirAll(dir, 0755)
+	if err != nil {
+		fmt.Println("Error creating directory:", err)
+	}
+
+	registerSignatureName := dir + "/" + registerSignature.Filename
+
+	err = c.SaveFile(image, imageName)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   true,
+			"message": "Terjadi kesalahan (Internal Server Error)",
+			"note":    "cannot save image, err: " + err.Error(),
+		})
+	}
+
+	var smeCertificateName string
+	if isSmeExist {
+		smeCertificateName = dir + "/" + smeCertificate.Filename
+		err = c.SaveFile(smeCertificate, smeCertificateName)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error":   true,
+				"message": "Terjadi kesalahan (Internal Server Error)",
+				"note":    "cannot save image, err: " + err.Error(),
+			})
+		}
+	}
+
+	err = c.SaveFile(registerSignature, registerSignatureName)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   true,
+			"message": "Terjadi kesalahan (Internal Server Error)",
+			"note":    "cannot save image, err: " + err.Error(),
+		})
+	}
+
 	db, err := database.Connect()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -105,15 +176,29 @@ func CreateTrademarkRegistration(c *fiber.Ctx) error {
 		})
 	}
 
-	data := &models.TrademarkRegistration{
-		RegistrationNumber: body.RegistrationNumber,
-		RegisterId:         at.User,
-		SMECertificate:     body.SMECertificate,
-		RegisterSignature:  body.RegisterSignature,
-		Status:             1,
+	trademarkId := uuid.New()
+
+	registration := &models.TrademarkRegistration{
+		ID:                trademarkId,
+		CreatedAt:         time.Now(),
+		CreatedBy:         at.User,
+		SMECertificate:    smeCertificateName,
+		RegisterSignature: registerSignatureName,
+	}
+	trademark := &models.Trademark{
+		RegisterNumber: utils.GenerateRegistrationNumber(),
+		TrademarkName:  strings.ToUpper(body.TrademarkName),
+		Class:          body.Class,
+		OwnerName:      strings.ToUpper(body.OwnerName),
+		Address:        body.Address,
+		Village:        body.Village,
+		District:       body.District,
+		Regency:        body.Regency,
+		Province:       body.Province,
+		Image:          imageName,
 	}
 
-	err = db.CreateTrademarkRegistration(data)
+	err = db.CreateTrademarkRegistration(registration, trademark)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error":   true,
@@ -155,5 +240,5 @@ func GetTrademarkRegistration(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(query)
+	return c.Status(fiber.StatusCreated).JSON(query)
 }

@@ -69,8 +69,10 @@ func Register(c *fiber.Ctx) error {
 		})
 	}
 
-	isEmailUsed := db.CheckDuplicateUsers("email", creds.Email)
-
+	isEmailUsed, err := db.CheckDuplicateUsers("email", creds.Email)
+	if err != nil {
+		return utils.InternalServerError(c, err)
+	}
 	if isEmailUsed {
 		return c.Status(fiber.StatusConflict).JSON(fiber.Map{
 			"error":   true,
@@ -86,16 +88,13 @@ func Register(c *fiber.Ctx) error {
 		LastName:  creds.LastName,
 		Password:  string(hashedPassword),
 		CreatedAt: time.Now(),
-		Level:     0,
+		Roles:     2,
+		Verified:  1,
 		Status:    1,
 	}
 
 	if err := db.CreateUser(&users); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":   true,
-			"message": "cannot store user to database",
-			"note":    "Terjadi kesalahan (Internal Server Error)",
-		})
+		return utils.InternalServerError(c, err)
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(users)
@@ -181,6 +180,26 @@ func RegisterProfile(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(profile)
 }
 
+func GetProfilebyId(c *fiber.Ctx) error {
+	at, err := utils.ExtractTokenMetadata(c)
+	if err != nil || at.Role != 1 {
+		return utils.Unauthorized(c)
+	}
+
+	db, err := database.Connect()
+	userId := c.Params("id")
+	profile, err := db.GetUserProfile(userId)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error":   true,
+			"note":    "Profil Akun tidak ditemukan",
+			"message": "no profile",
+		})
+	}
+	return c.Status(fiber.StatusOK).JSON(profile)
+
+}
+
 func GetProfile(c *fiber.Ctx) error {
 	claims, err := utils.ExtractTokenMetadata(c)
 	if err != nil {
@@ -191,7 +210,7 @@ func GetProfile(c *fiber.Ctx) error {
 	}
 
 	db, err := database.Connect()
-	profile, err := db.GetUserProfile(claims.User)
+	profile, err := db.GetUserProfile(claims.User.String())
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"error":   true,

@@ -1,2 +1,2 @@
-INSERT INTO announcement(id, created_at, title, description, created_by)
-VALUES (1, now(), "Selamat Datang Di Kantor Daring Urusan Merek Dagang", "Selamat Datang",)
+INSERT INTO announcements(id, created_at, title, description, created_by)
+VALUES (1, now(), 'Selamat Datang Di Kantor Daring Urusan Merek Dagang', 'Selamat Datang','6b8e661a-a4d8-407b-81e4-87816365e531')

@@ -25,3 +25,14 @@ func (q *TrademarkQueries) GetClass(id int) (models.TrademarkClass, error) {
 	}
 	return res, nil
 }
+
+func (q *TrademarkQueries) GetStatus() ([]models.TrademarkStatus, error) {
+	res := []models.TrademarkStatus{}
+	query := `SELECT * FROM trademark_status ORDER BY trademark_status.id`
+
+	err := q.Select(&res, query)
+	if err != nil {
+		return res, err
+	}
+	return res, nil
+}

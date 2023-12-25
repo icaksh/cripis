@@ -26,6 +26,10 @@ type Village struct {
 	Name       string `db:"name" json:"name" validate:"required"`
 }
 
+type AddressFromDak struct {
+	Id string `db:"address" json:"address" validate:"required"`
+}
+
 type ProvinceResponse struct {
 	Id   int    `db:"id" json:"id" validate:"required"`
 	Name string `db:"name" json:"name" validate:"required"`

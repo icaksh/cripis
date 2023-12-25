@@ -3,14 +3,15 @@ package routes
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/icaksh/cripis/app/controllers"
+	"github.com/icaksh/cripis/pkg/middleware"
 )
 
 func AnnouncementRoutes(private fiber.Router, public fiber.Router) {
-	pathName := "/announcements"
-	public.Get(pathName+"/", controllers.GetAnnouncements)
+	pathName := "/announcement"
+	public.Get(pathName+"s", controllers.GetAnnouncements)
 	public.Get(pathName+"/:id", controllers.GetAnnouncement)
 	//
-	private.Post(pathName+"/", controllers.CreateAnnouncement)
-	private.Put(pathName+"/", controllers.UpdateAnnouncement)
-	private.Delete(pathName+"/", controllers.DeleteAnnouncement)
+	private.Post(pathName+"/", middleware.JWTProtected, controllers.CreateAnnouncement)
+	private.Put(pathName+"/", middleware.JWTProtected, controllers.UpdateAnnouncement)
+	private.Delete(pathName+"/", middleware.JWTProtected, controllers.DeleteAnnouncement)
 }

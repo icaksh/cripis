@@ -1,0 +1,4 @@
+-- INSERT INTO user_profiles (user_id, created_at, updated_at, card_number, dob, sex, address, village, district, regency,
+--                           province, postal_code)
+-- VALUES ('6b8e661a-a4d8-407b-81e4-87816365e531', '2023-12-21 12:13:42.019459', '2023-12-21 12:13:42.019459',
+--         );

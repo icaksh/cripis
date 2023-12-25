@@ -94,11 +94,11 @@ func (q *CivilQueries) GetVillages(provinceId int, regencyId int, districtId int
 	return village, nil
 }
 
-func (q *CivilQueries) GetVillage(id int, provinceId int, regencyId int, districtId int) (models.Village, error) {
-	village := models.Village{}
-	query := `SELECT * FROM villages WHERE id=$1 AND province_id=$2 AND regency_id=$3 AND district_id=$4`
+func (q *CivilQueries) GetAddressFromDak(provinceId int, regencyId int, districtId int, villageId int) (models.AddressFromDak, error) {
+	village := models.AddressFromDak{}
+	query := `SELECT CONCAT (villages.name, ', ', districts.name, ', ', regencies.name,', ', provinces.name) AS address FROM villages INNER JOIN districts ON villages.district_id=districts.id INNER JOIN regencies ON villages.regency_id=regencies.id INNER JOIN provinces ON villages.province_id=provinces.id WHERE villages.province_id=$1 AND villages.regency_id=$2 AND villages.district_id=$3 AND villages.id=$4 AND districts.province_id=$1 and districts.regency_id=$2 and districts.id=$3 and regencies.province_id=$1 and regencies.id=$2 and provinces.id=$1`
 
-	err := q.Get(&village, query, id, provinceId, regencyId, districtId)
+	err := q.Get(&village, query, provinceId, regencyId, districtId, villageId)
 	if err != nil {
 		return village, err
 	}

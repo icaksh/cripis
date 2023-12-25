@@ -11,4 +11,5 @@ func DakRoutes(public fiber.Router) {
 	public.Get("/dak/:province_id", controllers.GetRegencies)
 	public.Get("/dak/:province_id/:regency_id", controllers.GetDistricts)
 	public.Get("/dak/:province_id/:regency_id/:district_id", controllers.GetVillages)
+	public.Get("/dak/:province_id/:regency_id/:district_id/:village_id", controllers.GetAddressFromDak)
 }

@@ -66,7 +66,7 @@ func Login(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error":   true,
 			"message": "Email yang Anda gunakan tidak ditemukan",
-			"note":    "wrong username",
+			"note":    "wrong email, err: " + err.Error(),
 		})
 	}
 
@@ -91,7 +91,7 @@ func Login(c *fiber.Ctx) error {
 		Email:     auth.Email,
 		FirstName: auth.FirstName,
 		LastName:  auth.LastName,
-		Role:      auth.Level,
+		Role:      auth.Roles,
 		Duration:  refreshTime,
 	}
 	token, err := utils.GenerateNewAuthToken(au)
