@@ -8,8 +8,13 @@ import (
 
 func UserRoutes(private fiber.Router, public fiber.Router) {
 	pathName := "/user"
-	public.Get(pathName+"/roles", controllers.GetUserRoles)
-	//
 	private.Get(pathName+"s", middleware.JWTProtected, controllers.GetUsers)
-	private.Get(pathName+"/:id", middleware.JWTProtected, controllers.GetProfilebyId)
+	private.Get(pathName+"/", middleware.JWTProtected, controllers.GetUser)
+	private.Get(pathName+"/:id", middleware.JWTProtected, controllers.GetUserById)
+	private.Put(pathName+"/", middleware.JWTProtected, controllers.EditUser)
+	private.Put(pathName+"/password", middleware.JWTProtected, controllers.EditUserPassword)
+	private.Put(pathName+"/status", middleware.JWTProtected, controllers.EditUserStatus)
+	private.Delete(pathName+"/:id", middleware.JWTProtected, controllers.DeleteUser)
+	//
+	public.Get(pathName+"/roles", controllers.GetUserRoles)
 }

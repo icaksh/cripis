@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS users
     first_name  VARCHAR(255) NOT NULL,
     last_name   VARCHAR(255) NOT NULL,
     password    VARCHAR(255) NOT NULL,
-    phone       BIGINT       NOT NULL,
     roles       INT          NOT NULL,
     status      INT          NOT NULL,
     verified    INT          NOT NULL,

@@ -12,12 +12,16 @@ func TrademarkRoutes(private fiber.Router, public fiber.Router) {
 	TrademarkSearch(pathName, public)
 	TrademarkRegister(pathName, private)
 
-	public.Get(pathName+"s", controllers.GetTrademarks)
+	public.Get(pathName+"s", controllers.GetTrademarksBySearch)
+	private.Get(pathName+"s/admin", middleware.JWTProtected, controllers.GetTrademarks)
+
 	private.Get(pathName+"s", middleware.JWTProtected, controllers.GetTrademarksByUser)
 	//
-	private.Post(pathName+"/", middleware.JWTProtected, controllers.CreateTrademarkRegistration)
-	private.Put(pathName+"/", middleware.JWTProtected, controllers.UpdateAnnouncement)
-	private.Delete(pathName+"/", middleware.JWTProtected, controllers.DeleteAnnouncement)
+	private.Get(pathName+"/:id", middleware.JWTProtected, controllers.GetTrademarkById)
+	private.Post(pathName+"/", middleware.JWTProtected, controllers.CreateTrademark)
+	private.Put(pathName+"/", middleware.JWTProtected, controllers.UpdateTrademark)
+	private.Put(pathName+"/status", middleware.JWTProtected, controllers.UpdateTrademarkStatus)
+	private.Delete(pathName+"/:id", middleware.JWTProtected, controllers.DeleteTrademark)
 
 }
 

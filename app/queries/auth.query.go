@@ -10,7 +10,6 @@ func (q *UserQueries) Auth(username string) (models.User, error) {
 	if err != nil {
 		return users, err
 	}
-	q.LogQueries.CreateLog(users.ID, "Login")
 	return users, nil
 
 }

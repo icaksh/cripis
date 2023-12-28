@@ -9,6 +9,7 @@ func MainRoutes(a *fiber.App) {
 	private := a.Group("/private")
 	AnnouncementRoutes(private, public)
 	AuthRoutes(private, public)
+	LogRoutes(private, public)
 	DakRoutes(public)
 	TrademarkRoutes(private, public)
 	UserRoutes(private, public)

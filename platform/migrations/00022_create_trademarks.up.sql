@@ -20,10 +20,13 @@ CREATE TABLE trademarks
     approved_at         TIMESTAMP    NULL,
     approved_by         UUID         NULL,
     file                VARCHAR(255) NULL,
-    image              VARCHAR(255) NOT NULL,
+    image               VARCHAR(255) NOT NULL,
+    sme_certificate     VARCHAR(255) NULL,
+    register_signature  VARCHAR(255) NULL,
     status              INT          NOT NULL,
+    notes               TEXT        NULL,
     FOREIGN KEY (village, district, regency, province) REFERENCES villages (id, district_id, regency_id, province_id),
-    FOREIGN KEY (created_by) REFERENCES users (id),
+    FOREIGN KEY (created_by) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (trademark_class) REFERENCES trademark_classes (id),
     FOREIGN KEY (status) REFERENCES trademark_status (id)
 );

@@ -11,8 +11,8 @@ type AnnouncementQueries struct {
 }
 
 func (q *AnnouncementQueries) CreateAnnouncement(v *models.Announcement) error {
-	query := `INSERT INTO announcements(id, created_at, updated_at, created_by, title, description, image) VALUES ($1, $2, $3, $4, $5, $6, $7)`
-	_, err := q.Exec(query, v.Id, time.Now(), time.Now(), v.CreatedBy, v.Title, v.Description, v.Image)
+	query := `INSERT INTO announcements(created_at, updated_at, created_by, title, description, image) VALUES ($1, $2, $3, $4, $5, $6)`
+	_, err := q.Exec(query, time.Now(), time.Now(), v.CreatedBy, v.Title, v.Description, v.Image)
 	if err != nil {
 		return err
 	}
@@ -20,6 +20,18 @@ func (q *AnnouncementQueries) CreateAnnouncement(v *models.Announcement) error {
 }
 
 func (q *AnnouncementQueries) GetAnnouncements() ([]models.Announcement, error) {
+	result := []models.Announcement{}
+	query := `SELECT * FROM announcements ORDER BY announcements.created_at DESC LIMIT 3`
+
+	err := q.Select(&result, query)
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
+}
+
+func (q *AnnouncementQueries) GetAllAnnouncements() ([]models.Announcement, error) {
 	result := []models.Announcement{}
 	query := `SELECT * FROM announcements ORDER BY announcements.created_at`
 
@@ -43,16 +55,14 @@ func (q *AnnouncementQueries) GetAnnouncement(userId int) (models.Announcement, 
 	return result, nil
 }
 
-func (q *AnnouncementQueries) UpdateAnnouncement(v *models.Announcement) (models.TrademarkRegistration, error) {
-	result := models.TrademarkRegistration{}
+func (q *AnnouncementQueries) UpdateAnnouncement(v *models.Announcement) error {
 	query := `UPDATE announcements SET updated_at=$2, title=$3, description=$4, image=$5 WHERE id=$1`
 
-	err := q.Get(&result, query, v.Id, time.Now(), v.Title, v.Description, v.Image)
+	_, err := q.Exec(query, v.Id, time.Now(), v.Title, v.Description, v.Image)
 	if err != nil {
-		return result, err
+		return err
 	}
-
-	return result, nil
+	return nil
 }
 
 func (q *AnnouncementQueries) DeleteAnnouncement(id int) error {

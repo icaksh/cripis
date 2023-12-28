@@ -10,10 +10,10 @@ import (
 
 func AuthRoutes(private fiber.Router, public fiber.Router) {
 	pathName := "/auth"
-	public.Post(pathName+"/login", controllers.Login)
+	public.Post(pathName+"/login", recaptcha.Middleware, controllers.Login)
 	public.Post(pathName+"/refresh", controllers.RefreshToken)
 	public.Post(pathName+"/register", recaptcha.Middleware, controllers.Register)
+	public.Post(pathName+"/reset", recaptcha.Middleware, controllers.Reset)
 	//
 	private.Post(pathName+"/logout", middleware.JWTProtected, controllers.Logout)
-	private.Get(pathName+"/profile", middleware.JWTProtected, controllers.GetProfile)
 }

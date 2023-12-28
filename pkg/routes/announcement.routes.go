@@ -9,9 +9,10 @@ import (
 func AnnouncementRoutes(private fiber.Router, public fiber.Router) {
 	pathName := "/announcement"
 	public.Get(pathName+"s", controllers.GetAnnouncements)
+	public.Get(pathName+"s/admin", controllers.GetAllAnnouncements)
 	public.Get(pathName+"/:id", controllers.GetAnnouncement)
 	//
 	private.Post(pathName+"/", middleware.JWTProtected, controllers.CreateAnnouncement)
 	private.Put(pathName+"/", middleware.JWTProtected, controllers.UpdateAnnouncement)
-	private.Delete(pathName+"/", middleware.JWTProtected, controllers.DeleteAnnouncement)
+	private.Delete(pathName+"/:id", middleware.JWTProtected, controllers.DeleteAnnouncement)
 }
